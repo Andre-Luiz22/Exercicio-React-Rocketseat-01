@@ -1,0 +1,24 @@
+.header {
+  height: 12.5rem;
+  background: var(--gray-700);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7rem;
+}
+
+.header img {
+  width: 1.38rem;
+  height: 2.25rem;
+}
+
+.header h1 {
+  line-height: 1.6;
+  color: var(--purple-dark);
+  font-weight: 900;
+  font-size: 2.5rem;
+}
+
+.header h1 span {
+  color: var(--blue);
+}
