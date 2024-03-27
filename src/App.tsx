@@ -3,14 +3,46 @@ import "./global.css";
 import styles from "./App.module.css";
 import { PlusCircle } from "phosphor-react";
 import { Tarefa } from "./components/Tarefa";
+import { ChangeEvent, FormEvent, useState } from "react";
 
 export function App() {
+  const [newTaskText, setNewTaskText] = useState("");
+  const [tasks, setTasks] = useState<string[]>([]);
+  const [concludedTasks, setConcludedTasks] = useState(0);
+
+  function handleNewTaskText(event: ChangeEvent<HTMLInputElement>) {
+    setNewTaskText(event.target.value);
+  }
+
+  function handleCreateNewTask(event: FormEvent) {
+    event.preventDefault();
+    setTasks([...tasks, newTaskText]);
+    setNewTaskText("");
+  }
+
+  function deleteTask(taskToDelete: string){
+    const tasksWithoutDeletedOne = tasks.filter(task => {
+      return task !== taskToDelete
+    })
+
+    setTasks(tasksWithoutDeletedOne)
+  }
+
   return (
     <>
       <Header />
       <main className={styles.main}>
-        <form className={styles.inputButtonContainer}>
-          <input type="text" placeholder="Adicione uma nova tarefa" />
+        <form
+          onSubmit={handleCreateNewTask}
+          className={styles.inputButtonContainer}
+        >
+          <input
+            onChange={handleNewTaskText}
+            value={newTaskText}
+            type="text"
+            placeholder="Adicione uma nova tarefa"
+            required
+          />
           <button>
             Criar <PlusCircle size={22} weight="bold" />
           </button>
@@ -19,15 +51,26 @@ export function App() {
         <div className={styles.tarefasContainer}>
           <header>
             <p>
-              Tarefas criadas <span>5</span>
+              Tarefas criadas <span>{tasks.length}</span>
             </p>
             <p>
-              Concluídas <span>2 de 5</span>
+              Concluídas{" "}
+              <span>
+                {concludedTasks} de {tasks.length}
+              </span>
             </p>
           </header>
-          <div className={styles.tarefas}>
-            <Tarefa />
-            <Tarefa />
+          <div className={styles.tarefasWrapper}>
+            <div className={styles.tarefas}>
+              {tasks.map((task) => (
+                <Tarefa
+                  content={task}
+                  onChecked={setConcludedTasks}
+                  totalCheckeds={concludedTasks}
+                  onDeletedTask={deleteTask}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </main>
